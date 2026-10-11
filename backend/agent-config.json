@@ -1,0 +1,19 @@
+{
+  "agentName": "insurance-policy-advisor",
+  "description": "Health insurance policy comparison and Q&A assistant",
+  "instruction": "You are a helpful assistant that answers questions about health insurance policies. Use the search tool to find relevant information from policy documents. When comparing policies, search each policy separately and provide a clear comparison. Always cite the policy name and page number for your answers.",
+  "foundationModel": "anthropic.claude-3-haiku-20240307-v1:0",
+  "idleSessionTTLInSeconds": 600,
+  "actionGroups": [
+    {
+      "actionGroupName": "policy-search-actions",
+      "description": "Search and retrieve information from insurance policy documents",
+      "actionGroupExecutor": {
+        "lambda": "arn:aws:lambda:REGION:ACCOUNT_ID:function:search-policies"
+      },
+      "apiSchema": {
+        "payload": "{\"openapi\":\"3.0.0\",\"info\":{\"title\":\"Policy Search API\",\"version\":\"1.0.0\"},\"paths\":{\"/search\":{\"post\":{\"summary\":\"Search policy documents\",\"description\":\"Search for relevant information in insurance policy documents using semantic search\",\"operationId\":\"searchPolicies\",\"requestBody\":{\"required\":true,\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"required\":[\"question\"],\"properties\":{\"question\":{\"type\":\"string\",\"description\":\"The question or search query\"},\"policy_ids\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"description\":\"Optional list of specific policy IDs to search\"},\"top_k\":{\"type\":\"integer\",\"default\":5,\"description\":\"Number of results to return\"}}}}}},\"responses\":{\"200\":{\"description\":\"Search results\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"results\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"policy_id\":{\"type\":\"string\"},\"policy_name\":{\"type\":\"string\"},\"text\":{\"type\":\"string\"},\"page\":{\"type\":\"integer\"},\"similarity\":{\"type\":\"number\"}}}},\"total_searched\":{\"type\":\"integer\"}}}}}}}}}},\"/list-policies\":{\"get\":{\"summary\":\"List all available policies\",\"description\":\"Get a list of all insurance policies in the system\",\"operationId\":\"listPolicies\",\"responses\":{\"200\":{\"description\":\"List of policies\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"policies\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"policy_id\":{\"type\":\"string\"},\"policy_name\":{\"type\":\"string\"}}}},\"count\":{\"type\":\"integer\"}}}}}}}}}}"
+      }
+    }
+  ]
+}
